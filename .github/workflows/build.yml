@@ -11,8 +11,11 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Fix Broken Submodule (RichEditorView)
+        run: |
+          rm -rf RichEditorView
+          git clone https://github.com/cjwirth/RichEditorView.git
 
       - name: Fix Git Permissions
         run: git config --global --add safe.directory '*'
