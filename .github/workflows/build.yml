@@ -12,13 +12,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Fix Broken Submodule (RichEditorView)
+      - name: Fix Git and Submodules
         run: |
-          rm -rf RichEditorView
-          git clone https://github.com/cjwirth/RichEditorView.git
-
-      - name: Fix Git Permissions
-        run: git config --global --add safe.directory '*'
+          git config --global --add safe.directory '*'
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          
+          git config --file .gitmodules submodule.RichEditorView.url https://github.com/cjwirth/RichEditorView.git
+          git submodule sync
+          git submodule update --init --recursive
 
       - name: Install Dependencies
         run: |
