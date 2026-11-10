@@ -11,6 +11,18 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Fix Git Permissions
+        run: git config --global --add safe.directory '*'
+
+      - name: Install Dependencies
+        run: |
+          if ! command -v swiftlint &> /dev/null; then
+            brew install swiftlint
+          fi
+          xcodebuild -resolvePackageDependencies -project Telegraph.xcodeproj -scheme Telegraph
 
       - name: Build App
         run: |
@@ -20,6 +32,7 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -arch arm64 \
+            -scmProvider system \
             CONFIGURATION_BUILD_DIR="${PWD}/build" \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
